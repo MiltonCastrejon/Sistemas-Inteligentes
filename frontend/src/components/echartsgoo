@@ -1,0 +1,73 @@
+import React, { useEffect, useState } from "react";
+import { Chart } from "react-google-charts";
+
+export default function Prediccion() {
+  const [chartData, setChartData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/predict-ventas");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const dataFromEndpoint = await response.json();
+        const chartDataArray = transformDataForChart(dataFromEndpoint);
+        setChartData(chartDataArray);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const transformDataForChart = (dataFromEndpoint) => {
+    const chartDataArray = [
+      [
+        "x",
+        "Aceite de Oliva",
+        "Azúcar",
+        "Café",
+        "Huevos",
+        "Leche",
+        { role: "annotation" },
+      ],
+    ];
+    Object.keys(dataFromEndpoint).forEach((semana, index, array) => {
+      const productos = dataFromEndpoint[semana];
+      chartDataArray.push([
+        parseInt(semana),
+        productos["Aceite de Oliva"],
+        productos["Azúcar"],
+        productos["Café"],
+        productos["Huevos"],
+        productos["Leche"],
+        index === array.length - 1 ? "Predicción" : "", // Añadir 'Predicción' sólo en la última semana
+      ]);
+    });
+    return chartDataArray;
+  };
+
+  const options = {
+    hAxis: {
+      title: "Time",
+    },
+    vAxis: {
+      title: "Popularity",
+    },
+    series: {
+      1: { curveType: "function" },
+    },
+  };
+
+  return (
+    <Chart
+      chartType="LineChart"
+      width="100%"
+      height="400px"
+      data={chartData}
+      options={options}
+    />
+  );
+}
