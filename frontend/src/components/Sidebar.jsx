@@ -119,27 +119,23 @@ export default function MiniDrawer() {
               </button>
               <button
                 className="w-full py-4 px-4 text-left transition-colors duration-300 ease-in-out hover:bg-primary-100 rounded-lg"
-                onClick={() => navigate("/predicciones")}>
+                onClick={() => navigate("/clientes")}>
                 <img
                   src={DashboardIcon}
                   alt=""
                   className="inline-block w-7 h-7 mr-3"
                 />
-                {open && (
-                  <span className="text-sm font-bold">Predicicones</span>
-                )}
+                {open && <span className="text-sm font-bold">Clientes</span>}
               </button>
               <button
                 className="w-full py-4 px-4 text-left transition-colors duration-300 ease-in-out hover:bg-primary-100 rounded-lg"
-                onClick={() => navigate("/administradores")}>
+                onClick={() => navigate("/empleados")}>
                 <img
-                  src={AdministradorIcon}
+                  src={ClienteIcon}
                   alt=""
                   className="inline-block w-7 h-7 mr-3 "
                 />
-                {open && (
-                  <span className="text-sm font-bold">Administradores</span>
-                )}
+                {open && <span className="text-sm font-bold">Empleados</span>}
               </button>
               <button
                 className=" w-full py-4 px-4 text-left transition-colors duration-300 ease-in-out hover:bg-primary-100 rounded-lg"

@@ -111,55 +111,44 @@ export default function Ventas() {
                   ACCIONES
                 </TableColumn>
               </TableHeader>
-              <TableBody>
-                {Array.isArray(chartData.ventas) &&
-                chartData.ventas.length > 0 ? (
-                  chartData.ventas.map((venta) => (
-                    <TableRow key={venta.idventa}>
-                      <TableCell className="text-center">
-                        {venta.idventa}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {venta.fechaventa}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {venta.nombre}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {venta.nombrempleado}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {venta.totalventa}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {venta.descripciontd}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <ButtonGroup>
-                          <Button
-                            auto
-                            size="small"
-                            onClick={() => updateOpen(true)}>
-                            Editar
-                          </Button>
-                          <Button auto size="small" variant="error">
-                            Eliminar
-                          </Button>
-                        </ButtonGroup>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={8}>Cargando datos...</TableCell>
-                    <TableCell colSpan={8}>Cargando datos...</TableCell>
-                    <TableCell colSpan={8}>Cargando datos...</TableCell>
-                    <TableCell colSpan={8}>Cargando datos...</TableCell>
-                    <TableCell colSpan={8}>Cargando datos...</TableCell>
-                    <TableCell colSpan={8}>Cargando datos...</TableCell>
-                    <TableCell colSpan={8}>Cargando datos...</TableCell>
-                  </TableRow>
-                )}
+              <TableBody emptyContent={"No hay datos para mostrar."}>
+                {Array.isArray(chartData.ventas) && chartData.ventas.length > 0
+                  ? chartData.ventas.map((venta) => (
+                      <TableRow key={venta.idventa}>
+                        <TableCell className="text-center">
+                          {venta.idventa}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {venta.fechaventa}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {venta.nombre}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {venta.nombrempleado}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {venta.totalventa}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {venta.descripciontd}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <ButtonGroup>
+                            <Button
+                              auto
+                              size="small"
+                              onClick={() => updateOpen(true)}>
+                              Editar
+                            </Button>
+                            <Button auto size="small" variant="error">
+                              Eliminar
+                            </Button>
+                          </ButtonGroup>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  : null}
               </TableBody>
             </Table>
           </CardBody>

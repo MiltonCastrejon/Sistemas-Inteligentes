@@ -10,9 +10,9 @@ import Home from "../pages/Home";
 import Sidebar from "../components/Sidebar";
 import Productos from "../pages/Productos";
 import Ventas from "../pages/Ventas";
-import Predicciones from "../pages/Prediciones";
+import Clientes from "../pages/Clientes";
+import Empleados from "../pages/Empleados";
 
-// funcion para decodificar el token
 function parseJwt(token) {
   const base64Url = token.split(".")[1];
   const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
@@ -37,33 +37,76 @@ const Rutas = () => {
     if (token) {
       const isValid = parseJwt(token).exp * 1000 > Date.now();
       setIsAuthenticated(isValid);
+      localStorage.setItem("isAuthenticated", isValid);
     }
   }, []);
+
   return (
     <Router>
-      {isAuthenticated && <Sidebar isAuthenticated={isAuthenticated} />}
+      {localStorage.getItem("isAuthenticated") === "true" && (
+        <Sidebar isAuthenticated={isAuthenticated} />
+      )}
       <Routes>
         <Route
           path="/login"
-          element={isAuthenticated ? <Navigate to="/home" /> : <Login />}
+          element={
+            localStorage.getItem("isAuthenticated") === "true" ? (
+              <Navigate to="/home" />
+            ) : (
+              <Login />
+            )
+          }
         />
         <Route
           path="/home"
-          element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
+          element={
+            localStorage.getItem("isAuthenticated") === "true" ? (
+              <Home />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
         <Route
           path="/productos"
-          element={isAuthenticated ? <Productos /> : <Navigate to="/login" />}
+          element={
+            localStorage.getItem("isAuthenticated") === "true" ? (
+              <Productos />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
         <Route index element={<Navigate to="/login" />} />
         <Route
           path="/ventas"
-          element={isAuthenticated ? <Ventas /> : <Navigate to="/login" />}
+          element={
+            localStorage.getItem("isAuthenticated") === "true" ? (
+              <Ventas />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        
+        <Route
+          path="/clientes"
+          element={
+            localStorage.getItem("isAuthenticated") === "true" ? (
+              <Clientes />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
         <Route
-          path="/predicciones"
+          path="/empleados"
           element={
-            isAuthenticated ? <Predicciones /> : <Navigate to="/login" />
+            localStorage.getItem("isAuthenticated") === "true" ? (
+              <Empleados />
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
       </Routes>

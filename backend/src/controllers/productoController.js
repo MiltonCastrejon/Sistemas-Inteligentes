@@ -47,7 +47,7 @@ export const createProducto = async (req, res) => {
       .input('descripcion', sql.VarChar, descripcion)
       .input('idcategoria', sql.Int, idcategoria)
       .input('idmarca', sql.Int, idmarca)
-      .input('precio', sql.Decimal, precio)
+      .input('precio', sql.Decimal(10,2), precio)
       .input('stock', sql.Int, stock)
       .query(queryProductos.insertProducto);
 

@@ -79,6 +79,7 @@ export default function Productos() {
       ) {
         return alert("Faltan campos por llenar");
       }
+      console.log(precio);
       const response = await fetch("http://localhost:3000/productos", {
         method: "POST",
         headers: {
@@ -90,10 +91,11 @@ export default function Productos() {
           descripcion,
           idcategoria,
           idmarca,
-          precio,
+          precio: parseFloat(precio),
           stock,
         }),
       });
+
       if (response.ok) {
         const updatedTotalPages = Math.ceil((chartData.total + 1) / pageSize);
 
@@ -164,12 +166,6 @@ export default function Productos() {
         setMarca(productData.idmarca);
         setPrecio(productData.precio);
         setStock(productData.stock);
-        console.log(productData.nombre);
-        console.log(productData.descripcion);
-        console.log("categori:", productData.idcategoria);
-        console.log("marca", productData.idmarca);
-        console.log(productData.precio);
-        console.log(productData.stock);
       } else {
         alert("Error al obtener los datos del producto");
         console.log(response);
@@ -271,7 +267,7 @@ export default function Productos() {
                 color="primary"
                 className="p-2"
                 label="CATEGORIA"
-                onChange={(e) => setCategoria(e.target.value)}
+                onChange={(value) => setCategoria(value.target.value)}
                 selectedKeys={[idcategoria]}>
                 {categoriaOptions.map((categoria) => (
                   <SelectItem key={categoria.idcategoria}>
@@ -284,10 +280,10 @@ export default function Productos() {
                 color="primary"
                 className="p-2"
                 label="MARCA"
-                onChange={(e) => setMarca(e.target.value)}
+                onChange={(value) => setMarca(value.target.value)}
                 selectedKeys={[idmarca]}>
                 {marcaOptions.map((marca) => (
-                  <SelectItem key={marca.idmarca} value={marca.idmarca}>
+                  <SelectItem key={marca.idmarca}>
                     {marca.descripcion}
                   </SelectItem>
                 ))}
@@ -297,9 +293,14 @@ export default function Productos() {
                 color="primary"
                 className="p-2"
                 label="PRECIO"
-                type="number"
+                type="text"
                 value={precio}
-                onChange={(value) => setPrecio(value.target.value)}
+                onChange={(value) => {
+                  const precio = value.target.value;
+                  if (!isNaN(precio) && precio.trim() !== "") {
+                    setPrecio(precio);
+                  }
+                }}
               />
               <Input
                 variant="faded"
@@ -399,59 +400,50 @@ export default function Productos() {
               ACCIONES
             </TableColumn>
           </TableHeader>
-          <TableBody>
+          <TableBody emptyContent={"No hay datos para mostrar."}>
             {Array.isArray(chartData.productos) &&
-            chartData.productos.length > 0 ? (
-              chartData.productos.map((prop, index) => (
-                <TableRow key={index}>
-                  <TableCell className="">{prop.idproducto}</TableCell>
-                  <TableCell className="">{prop.nombre}</TableCell>
-                  <TableCell className="">{prop.descripcion}</TableCell>
-                  <TableCell className="">{prop.categoria}</TableCell>
-                  <TableCell className="">{prop.marca}</TableCell>
-                  <TableCell className="">{prop.precio}</TableCell>
-                  <TableCell className="">{prop.stock}</TableCell>
-                  <TableCell className="text-center">
-                    <ButtonGroup fullWidth>
-                      <Button
-                        variant="shadow"
-                        color="primary"
-                        onClick={() =>
-                          handleEdit(
-                            prop.idproducto,
-                            prop.nombre,
-                            prop.descripcion,
-                            prop.idcategoria,
-                            prop.idmarca,
-                            prop.precio,
-                            prop.stock
-                          )
-                        }>
-                        <span className="text-lg text-white cursor-pointer active:opacity-50">
-                          <EditIcon />
+            chartData.productos.length > 0
+              ? chartData.productos.map((prop, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="">{prop.idproducto}</TableCell>
+                    <TableCell className="">{prop.nombre}</TableCell>
+                    <TableCell className="">{prop.descripcion}</TableCell>
+                    <TableCell className="">{prop.categoria}</TableCell>
+                    <TableCell className="">{prop.marca}</TableCell>
+                    <TableCell className="">
+                      S/ {parseFloat(prop.precio).toFixed(2)}
+                    </TableCell>
+                    <TableCell className="">{prop.stock}</TableCell>
+                    <TableCell className="text-center">
+                      <ButtonGroup fullWidth>
+                        <Button
+                          variant="shadow"
+                          color="primary"
+                          onClick={() =>
+                            handleEdit(
+                              prop.idproducto,
+                              prop.nombre,
+                              prop.descripcion,
+                              prop.idcategoria,
+                              prop.idmarca,
+                              prop.precio,
+                              prop.stock
+                            )
+                          }>
+                          <span className="text-lg text-white cursor-pointer active:opacity-50">
+                            <EditIcon />
+                          </span>
+                        </Button>
+                        <span>
+                          <Dialog
+                            onDelete={() => handleDelete(prop.idproducto)}
+                          />
                         </span>
-                      </Button>
-                      <span>
-                        <Dialog
-                          onDelete={() => handleDelete(prop.idproducto)}
-                        />
-                      </span>
-                    </ButtonGroup>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={8}>Cargando datos...</TableCell>
-                <TableCell colSpan={8}>Cargando datos...</TableCell>
-                <TableCell colSpan={8}>Cargando datos...</TableCell>
-                <TableCell colSpan={8}>Cargando datos...</TableCell>
-                <TableCell colSpan={8}>Cargando datos...</TableCell>
-                <TableCell colSpan={8}>Cargando datos...</TableCell>
-                <TableCell colSpan={8}>Cargando datos...</TableCell>
-                <TableCell colSpan={8}>Cargando datos...</TableCell>
-              </TableRow>
-            )}
+                      </ButtonGroup>
+                    </TableCell>
+                  </TableRow>
+                ))
+              : null}
           </TableBody>
         </Table>
       </div>

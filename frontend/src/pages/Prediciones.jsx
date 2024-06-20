@@ -88,6 +88,12 @@ export default function Predicciones() {
         symbol: "emptyCircle",
         symbolSize: 15,
         borderType: "dotted",
+        label: {
+          show: true,
+          position: "top",
+          color: "black",
+          fontSize: 9,
+        },
       }));
 
       const option = {
@@ -163,24 +169,20 @@ export default function Predicciones() {
   }, []);
 
   return (
-    <div className="flex bg-gray-100 h-screen">
-      <div className={`m-7 w-screen ${open ? "ml-64" : "ml-24"}`}>
-        <Card className="m-5 p-9 shadow-2xl bg-white rounded-3xl">
-          <h2 className="text-3xl font-bold ">PREDICCION</h2>
-          <div ref={chartRef} style={{ width: "100%", height: "600px" }}>
-            <div
-              className="flex justify-center items-center"
-              style={{ minHeight: "400px" }}>
-              <Progress
-                size="lg"
-                isIndeterminate
-                label="Calculando..."
-                className="max-w-md"
-              />
-            </div>
-          </div>
-        </Card>
+    <Card className="mt-5 p-9">
+      <h2 className="text-3xl font-bold ">PREDICCION</h2>
+      <div ref={chartRef} style={{ width: "100%", height: "600px" }}>
+        <div
+          className="flex justify-center items-center"
+          style={{ minHeight: "400px" }}>
+          <Progress
+            size="lg"
+            isIndeterminate
+            label="Calculando..."
+            className="max-w-md"
+          />
+        </div>
       </div>
-    </div>
+    </Card>
   );
 }
