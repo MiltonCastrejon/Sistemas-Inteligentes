@@ -10,7 +10,7 @@ import {
 } from '../controllers/productoController.js';
 import { getCategorias } from '../controllers/categoriaController.js';
 import { getMarcas } from '../controllers/marcaController.js';
-import { getVentas } from '../controllers/ventasController.js';
+import { getVentas, addVentas } from '../controllers/ventasController.js';
 import { spawn } from 'child_process';
 
 const router = Router();
@@ -34,6 +34,8 @@ router.get('/categorias', getCategorias);
 router.get('/marcas', getMarcas);
 
 router.get('/ventas', getVentas);
+
+router.post('/ventas', addVentas);
 
 router.get('/predict-ventas', (req, res) => {
   

@@ -36,7 +36,7 @@ export const createProducto = async (req, res) => {
     precio == null ||
     stock == null
   ) {
-    return res.status(400).send({ message: 'Faltan campos por llenar' });
+    return res.status(400).send({ message: 'Faltan campos por llenar...' });
   }
 
   try {

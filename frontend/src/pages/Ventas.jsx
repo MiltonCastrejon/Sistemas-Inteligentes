@@ -12,9 +12,6 @@ import {
   Pagination,
   Button,
   ButtonGroup,
-  Select,
-  SelectItem,
-  Tab,
 } from "@nextui-org/react";
 import { useAppStore } from "../components/appStore";
 import DetalleVentas from "./DetalleVentas.jsx";
@@ -27,6 +24,17 @@ export default function Ventas() {
   const [chartData, setChartData] = useState({
     bloques: [],
     total: 0,
+  });
+  const [nuevaVenta, setNuevaVenta] = useState({
+    idcliente: "",
+    idempleado: "",
+    idtipodocumento: "",
+    detalles: [],
+  });
+  const [nuevoProducto, setNuevoProducto] = useState({
+    idproducto: "",
+    cantidad: 1,
+    preciounitario: 0,
   });
 
   useEffect(() => {
@@ -53,6 +61,48 @@ export default function Ventas() {
     setCurrentPage(page);
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNuevaVenta({ ...nuevaVenta, [name]: value });
+  };
+
+  const handleProductoChange = (e) => {
+    const { name, value } = e.target;
+    setNuevoProducto({ ...nuevoProducto, [name]: value });
+  };
+
+  const handleAddProducto = () => {
+    setNuevaVenta({
+      ...nuevaVenta,
+      detalles: [...nuevaVenta.detalles, nuevoProducto],
+    });
+    setNuevoProducto({ idproducto: "", cantidad: 1, preciounitario: 0 });
+  };
+
+  const handleSubmitVenta = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/ventas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(nuevaVenta),
+      });
+      if (!response.ok) {
+        throw new Error("Error en la petición" + response.statusText);
+      }
+      fetchData(currentPage, pageSize); // Refresh the data
+      setNuevaVenta({
+        idcliente: "",
+        idempleado: "",
+        idtipodocumento: "",
+        detalles: [],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="flex bg-slate-50">
       <div className={`m-7 w-full ${open ? "ml-64" : "ml-24"} `}>
@@ -67,6 +117,64 @@ export default function Ventas() {
             </Card>
             <Card className="mt-4">
               <DetalleVentas />
+            </Card>
+            <Card className="mt-4 p-4">
+              <h3 className="text-xl font-bold mb-4">Añadir Nueva Venta</h3>
+              <div className="mb-4">
+                <Input
+                  name="idcliente"
+                  label="ID Cliente"
+                  value={nuevaVenta.idcliente}
+                  onChange={handleInputChange}
+                  className="mb-2"
+                />
+                <Input
+                  name="idempleado"
+                  label="ID Empleado"
+                  value={nuevaVenta.idempleado}
+                  onChange={handleInputChange}
+                  className="mb-2"
+                />
+                <Input
+                  name="idtipodocumento"
+                  label="ID Tipo Documento"
+                  value={nuevaVenta.idtipodocumento}
+                  onChange={handleInputChange}
+                  className="mb-2"
+                />
+              </div>
+              <h4 className="text-lg font-bold mb-2">Productos</h4>
+              <div className="mb-4 flex">
+                <Input
+                  name="idproducto"
+                  label="ID Producto"
+                  value={nuevoProducto.idproducto}
+                  onChange={handleProductoChange}
+                  className="mb-2 mr-2"
+                />
+                <Input
+                  name="cantidad"
+                  label="Cantidad"
+                  type="number"
+                  value={nuevoProducto.cantidad}
+                  onChange={handleProductoChange}
+                  className="mb-2 mr-2"
+                />
+                <Input
+                  name="preciounitario"
+                  label="Precio Unitario"
+                  type="number"
+                  value={nuevoProducto.preciounitario}
+                  onChange={handleProductoChange}
+                  className="mb-2 mr-2"
+                />
+                <Button onClick={handleAddProducto} className="mb-2">
+                  Añadir Producto
+                </Button>
+              </div>
+              <Button onClick={handleSubmitVenta} className="mt-2">
+                Crear Venta
+              </Button>
             </Card>
             <Table
               color="primary"
@@ -122,7 +230,7 @@ export default function Ventas() {
                           {venta.fechaventa}
                         </TableCell>
                         <TableCell className="text-center">
-                          {venta.nombre}
+                          {venta.nombrecliente}
                         </TableCell>
                         <TableCell className="text-center">
                           {venta.nombrempleado}

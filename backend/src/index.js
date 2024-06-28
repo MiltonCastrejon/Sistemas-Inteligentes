@@ -16,10 +16,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-// Coloca tus rutas API antes de la ruta que devuelve index.html
 app.use('/', routes);
 
-// Para cualquier ruta que no coincida con las anteriores, devuelve index.html
 app.get('*', (req, res) => { 
       res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
